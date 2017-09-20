@@ -136,6 +136,22 @@ EXTRA_DIST += test-canonicalize-lgpl.c signature.h null-ptr.h macros.h
 
 ## end   gnulib module canonicalize-lgpl-tests
 
+## begin gnulib module cloexec
+
+libtests_a_SOURCES += cloexec.c
+
+EXTRA_DIST += cloexec.h
+
+## end   gnulib module cloexec
+
+## begin gnulib module cloexec-tests
+
+TESTS += test-cloexec
+check_PROGRAMS += test-cloexec
+EXTRA_DIST += test-cloexec.c macros.h
+
+## end   gnulib module cloexec-tests
+
 ## begin gnulib module close-tests
 
 TESTS += test-close
@@ -223,6 +239,15 @@ EXTRA_DIST += test-errno.c
 
 ## end   gnulib module errno-tests
 
+## begin gnulib module fcntl
+
+
+EXTRA_DIST += fcntl.c
+
+EXTRA_libtests_a_SOURCES += fcntl.c
+
+## end   gnulib module fcntl
+
 ## begin gnulib module fcntl-h-tests
 
 TESTS += test-fcntl-h
@@ -230,6 +255,14 @@ check_PROGRAMS += test-fcntl-h
 EXTRA_DIST += test-fcntl-h.c
 
 ## end   gnulib module fcntl-h-tests
+
+## begin gnulib module fcntl-tests
+
+TESTS += test-fcntl
+check_PROGRAMS += test-fcntl
+EXTRA_DIST += test-fcntl.c signature.h macros.h
+
+## end   gnulib module fcntl-tests
 
 ## begin gnulib module fdopen
 
@@ -611,6 +644,25 @@ EXTRA_DIST += test-priv-set.c macros.h
 
 ## end   gnulib module priv-set-tests
 
+## begin gnulib module pthread_sigmask
+
+
+EXTRA_DIST += pthread_sigmask.c
+
+EXTRA_libtests_a_SOURCES += pthread_sigmask.c
+
+## end   gnulib module pthread_sigmask
+
+## begin gnulib module pthread_sigmask-tests
+
+TESTS += test-pthread_sigmask1 test-pthread_sigmask2
+check_PROGRAMS += test-pthread_sigmask1 test-pthread_sigmask2
+test_pthread_sigmask1_LDADD = $(LDADD) @LIB_PTHREAD_SIGMASK@
+test_pthread_sigmask2_LDADD = $(LDADD) @LIB_PTHREAD_SIGMASK@ @LIBMULTITHREAD@
+EXTRA_DIST += test-pthread_sigmask1.c test-pthread_sigmask2.c signature.h macros.h
+
+## end   gnulib module pthread_sigmask-tests
+
 ## begin gnulib module putenv
 
 
@@ -628,6 +680,23 @@ test_quotearg_simple_LDADD = $(LDADD) @LIBINTL@
 EXTRA_DIST += test-quotearg-simple.c test-quotearg.h macros.h zerosize-ptr.h
 
 ## end   gnulib module quotearg-simple-tests
+
+## begin gnulib module raise
+
+
+EXTRA_DIST += raise.c
+
+EXTRA_libtests_a_SOURCES += raise.c
+
+## end   gnulib module raise
+
+## begin gnulib module raise-tests
+
+TESTS += test-raise
+check_PROGRAMS += test-raise
+EXTRA_DIST += test-raise.c signature.h macros.h
+
+## end   gnulib module raise-tests
 
 ## begin gnulib module read-tests
 
@@ -714,6 +783,73 @@ check_PROGRAMS += test-setlocale1 test-setlocale2
 EXTRA_DIST += test-setlocale1.sh test-setlocale1.c test-setlocale2.sh test-setlocale2.c signature.h macros.h
 
 ## end   gnulib module setlocale-tests
+
+## begin gnulib module signal-h
+
+BUILT_SOURCES += signal.h
+
+# We need the following in order to create <signal.h> when the system
+# doesn't have a complete one.
+signal.h: signal.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
+	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
+	      -e 's|@''NEXT_SIGNAL_H''@|$(NEXT_SIGNAL_H)|g' \
+	      -e 's|@''GNULIB_PTHREAD_SIGMASK''@|$(GNULIB_PTHREAD_SIGMASK)|g' \
+	      -e 's|@''GNULIB_RAISE''@|$(GNULIB_RAISE)|g' \
+	      -e 's/@''GNULIB_SIGNAL_H_SIGPIPE''@/$(GNULIB_SIGNAL_H_SIGPIPE)/g' \
+	      -e 's/@''GNULIB_SIGPROCMASK''@/$(GNULIB_SIGPROCMASK)/g' \
+	      -e 's/@''GNULIB_SIGACTION''@/$(GNULIB_SIGACTION)/g' \
+	      -e 's|@''HAVE_POSIX_SIGNALBLOCKING''@|$(HAVE_POSIX_SIGNALBLOCKING)|g' \
+	      -e 's|@''HAVE_PTHREAD_SIGMASK''@|$(HAVE_PTHREAD_SIGMASK)|g' \
+	      -e 's|@''HAVE_RAISE''@|$(HAVE_RAISE)|g' \
+	      -e 's|@''HAVE_SIGSET_T''@|$(HAVE_SIGSET_T)|g' \
+	      -e 's|@''HAVE_SIGINFO_T''@|$(HAVE_SIGINFO_T)|g' \
+	      -e 's|@''HAVE_SIGACTION''@|$(HAVE_SIGACTION)|g' \
+	      -e 's|@''HAVE_STRUCT_SIGACTION_SA_SIGACTION''@|$(HAVE_STRUCT_SIGACTION_SA_SIGACTION)|g' \
+	      -e 's|@''HAVE_TYPE_VOLATILE_SIG_ATOMIC_T''@|$(HAVE_TYPE_VOLATILE_SIG_ATOMIC_T)|g' \
+	      -e 's|@''HAVE_SIGHANDLER_T''@|$(HAVE_SIGHANDLER_T)|g' \
+	      -e 's|@''REPLACE_PTHREAD_SIGMASK''@|$(REPLACE_PTHREAD_SIGMASK)|g' \
+	      -e 's|@''REPLACE_RAISE''@|$(REPLACE_RAISE)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
+	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
+	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
+	      < $(srcdir)/signal.in.h; \
+	} > $@-t && \
+	mv $@-t $@
+MOSTLYCLEANFILES += signal.h signal.h-t
+
+EXTRA_DIST += signal.in.h
+
+## end   gnulib module signal-h
+
+## begin gnulib module signal-h-tests
+
+TESTS += test-signal-h
+check_PROGRAMS += test-signal-h
+EXTRA_DIST += test-signal-h.c
+
+## end   gnulib module signal-h-tests
+
+## begin gnulib module sigprocmask
+
+
+EXTRA_DIST += sigprocmask.c
+
+EXTRA_libtests_a_SOURCES += sigprocmask.c
+
+## end   gnulib module sigprocmask
+
+## begin gnulib module sigprocmask-tests
+
+TESTS += test-sigprocmask
+check_PROGRAMS += test-sigprocmask
+EXTRA_DIST += test-sigprocmask.c signature.h macros.h
+
+## end   gnulib module sigprocmask-tests
 
 ## begin gnulib module sleep-tests
 

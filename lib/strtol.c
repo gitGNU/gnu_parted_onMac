@@ -1,1 +1,1 @@
-/Users/raliclo/Library/Caches/Homebrew/parted-3.2/gnulib/lib/strtol.c
+/Users/dojo/work/gnu_parted_onMac/gnulib/lib/strtol.c

@@ -67,6 +67,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module calloc-posix:
   # Code from module canonicalize-lgpl:
   # Code from module canonicalize-lgpl-tests:
+  # Code from module cloexec:
+  # Code from module cloexec-tests:
   # Code from module close:
   # Code from module close-stream:
   # Code from module close-tests:
@@ -91,8 +93,10 @@ AC_DEFUN([gl_EARLY],
   # Code from module exitfail:
   # Code from module extensions:
   # Code from module extern-inline:
+  # Code from module fcntl:
   # Code from module fcntl-h:
   # Code from module fcntl-h-tests:
+  # Code from module fcntl-tests:
   # Code from module fd-hook:
   # Code from module fdl:
   # Code from module fdopen:
@@ -191,11 +195,15 @@ AC_DEFUN([gl_EARLY],
   # Code from module priv-set:
   # Code from module priv-set-tests:
   # Code from module progname:
+  # Code from module pthread_sigmask:
+  # Code from module pthread_sigmask-tests:
   # Code from module putenv:
   # Code from module quote:
   # Code from module quotearg:
   # Code from module quotearg-simple:
   # Code from module quotearg-simple-tests:
+  # Code from module raise:
+  # Code from module raise-tests:
   # Code from module read:
   # Code from module read-tests:
   # Code from module readlink:
@@ -209,11 +217,14 @@ AC_DEFUN([gl_EARLY],
   # Code from module rpmatch:
   # Code from module safe-read:
   # Code from module same-inode:
-  # Code from module secure_getenv:
   # Code from module setenv:
   # Code from module setenv-tests:
   # Code from module setlocale:
   # Code from module setlocale-tests:
+  # Code from module signal-h:
+  # Code from module signal-h-tests:
+  # Code from module sigprocmask:
+  # Code from module sigprocmask-tests:
   # Code from module sleep:
   # Code from module sleep-tests:
   # Code from module snippet/_Noreturn:
@@ -388,7 +399,11 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_FSTAT
   if test $REPLACE_FSTAT = 1; then
     AC_LIBOBJ([fstat])
-    AC_LIBOBJ([stat-w32])
+    case "$host_os" in
+      mingw*)
+        AC_LIBOBJ([stat-w32])
+        ;;
+    esac
     gl_PREREQ_FSTAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([fstat])
@@ -554,12 +569,6 @@ AC_SUBST([LTALLOCA])
   fi
   gl_STDLIB_MODULE_INDICATOR([rpmatch])
   gl_PREREQ_SAFE_READ
-  gl_FUNC_SECURE_GETENV
-  if test $HAVE_SECURE_GETENV = 0; then
-    AC_LIBOBJ([secure_getenv])
-    gl_PREREQ_SECURE_GETENV
-  fi
-  gl_STDLIB_MODULE_INDICATOR([secure_getenv])
   gl_FUNC_SLEEP
   if test $HAVE_SLEEP = 0 || test $REPLACE_SLEEP = 1; then
     AC_LIBOBJ([sleep])
@@ -569,7 +578,11 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_STAT
   if test $REPLACE_STAT = 1; then
     AC_LIBOBJ([stat])
-    AC_LIBOBJ([stat-w32])
+    case "$host_os" in
+      mingw*)
+        AC_LIBOBJ([stat-w32])
+        ;;
+    esac
     gl_PREREQ_STAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([stat])
@@ -709,6 +722,7 @@ changequote([, ])dnl
   gt_LOCALE_FR_UTF8
   gt_LOCALE_FR
   gt_LOCALE_TR_UTF8
+  gl_MODULE_INDICATOR_FOR_TESTS([cloexec])
   gl_CTYPE_H
   gl_FUNC_DUP2
   if test $HAVE_DUP2 = 0 || test $REPLACE_DUP2 = 1; then
@@ -718,6 +732,11 @@ changequote([, ])dnl
   gl_UNISTD_MODULE_INDICATOR([dup2])
   gl_ENVIRON
   gl_UNISTD_MODULE_INDICATOR([environ])
+  gl_FUNC_FCNTL
+  if test $HAVE_FCNTL = 0 || test $REPLACE_FCNTL = 1; then
+    AC_LIBOBJ([fcntl])
+  fi
+  gl_FCNTL_MODULE_INDICATOR([fcntl])
   gl_FUNC_FDOPEN
   if test $REPLACE_FDOPEN = 1; then
     AC_LIBOBJ([fdopen])
@@ -764,6 +783,12 @@ changequote([, ])dnl
   fi
   gl_FCNTL_MODULE_INDICATOR([open])
   gl_PRIV_SET
+  gl_FUNC_PTHREAD_SIGMASK
+  if test $HAVE_PTHREAD_SIGMASK = 0 || test $REPLACE_PTHREAD_SIGMASK = 1; then
+    AC_LIBOBJ([pthread_sigmask])
+    gl_PREREQ_PTHREAD_SIGMASK
+  fi
+  gl_SIGNAL_MODULE_INDICATOR([pthread_sigmask])
   gl_FUNC_PUTENV
   if test $REPLACE_PUTENV = 1; then
     AC_LIBOBJ([putenv])
@@ -775,6 +800,12 @@ changequote([, ])dnl
   gl_FUNC_MMAP_ANON
   AC_CHECK_HEADERS_ONCE([sys/mman.h])
   AC_CHECK_FUNCS_ONCE([mprotect])
+  gl_FUNC_RAISE
+  if test $HAVE_RAISE = 0 || test $REPLACE_RAISE = 1; then
+    AC_LIBOBJ([raise])
+    gl_PREREQ_RAISE
+  fi
+  gl_SIGNAL_MODULE_INDICATOR([raise])
   gl_FUNC_SETENV
   if test $HAVE_SETENV = 0 || test $REPLACE_SETENV = 1; then
     AC_LIBOBJ([setenv])
@@ -790,6 +821,13 @@ changequote([, ])dnl
   gt_LOCALE_FR_UTF8
   gt_LOCALE_JA
   gt_LOCALE_ZH_CN
+  gl_SIGNAL_H
+  gl_SIGNALBLOCKING
+  if test $HAVE_POSIX_SIGNALBLOCKING = 0; then
+    AC_LIBOBJ([sigprocmask])
+    gl_PREREQ_SIGPROCMASK
+  fi
+  gl_SIGNAL_MODULE_INDICATOR([sigprocmask])
   AC_CHECK_DECLS_ONCE([alarm])
   gl_STDALIGN_H
   AC_REQUIRE([gt_TYPE_WCHAR_T])
@@ -1048,7 +1086,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/rpmatch.c
   lib/safe-read.c
   lib/safe-read.h
-  lib/secure_getenv.c
   lib/sleep.c
   lib/stat-w32.c
   lib/stat-w32.h
@@ -1129,6 +1166,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/extensions.m4
   m4/extern-inline.m4
   m4/fcntl-o.m4
+  m4/fcntl.m4
   m4/fcntl_h.m4
   m4/fdopen.m4
   m4/flexmember.m4
@@ -1172,6 +1210,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/lstat.m4
   m4/malloc.m4
   m4/malloca.m4
+  m4/manywarnings-c++.m4
   m4/manywarnings.m4
   m4/mbrtowc.m4
   m4/mbsinit.m4
@@ -1187,22 +1226,26 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/nl_langinfo.m4
   m4/nocrash.m4
   m4/off_t.m4
+  m4/open-cloexec.m4
   m4/open.m4
   m4/pathmax.m4
   m4/priv-set.m4
   m4/pthread_rwlock_rdlock.m4
+  m4/pthread_sigmask.m4
   m4/putenv.m4
   m4/quote.m4
   m4/quotearg.m4
+  m4/raise.m4
   m4/read.m4
   m4/readlink.m4
   m4/realloc.m4
   m4/regex.m4
   m4/rpmatch.m4
   m4/safe-read.m4
-  m4/secure_getenv.m4
   m4/setenv.m4
   m4/setlocale.m4
+  m4/signal_h.m4
+  m4/signalblocking.m4
   m4/sleep.m4
   m4/ssize_t.m4
   m4/stat.m4
@@ -1264,6 +1307,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-c-strncasecmp.c
   tests/test-calloc-gnu.c
   tests/test-canonicalize-lgpl.c
+  tests/test-cloexec.c
   tests/test-close.c
   tests/test-ctype.c
   tests/test-dirname.c
@@ -1271,6 +1315,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-environ.c
   tests/test-errno.c
   tests/test-fcntl-h.c
+  tests/test-fcntl.c
   tests/test-fdopen.c
   tests/test-fgetc.c
   tests/test-fpending.c
@@ -1326,8 +1371,11 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-open.h
   tests/test-pathmax.c
   tests/test-priv-set.c
+  tests/test-pthread_sigmask1.c
+  tests/test-pthread_sigmask2.c
   tests/test-quotearg-simple.c
   tests/test-quotearg.h
+  tests/test-raise.c
   tests/test-read.c
   tests/test-readlink.c
   tests/test-readlink.h
@@ -1339,6 +1387,8 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-setlocale1.sh
   tests/test-setlocale2.c
   tests/test-setlocale2.sh
+  tests/test-signal-h.c
+  tests/test-sigprocmask.c
   tests/test-sleep.c
   tests/test-stat.c
   tests/test-stat.h
@@ -1399,8 +1449,11 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/binary-io.c
   tests=lib/binary-io.h
   tests=lib/c++defs.h
+  tests=lib/cloexec.c
+  tests=lib/cloexec.h
   tests=lib/ctype.in.h
   tests=lib/dup2.c
+  tests=lib/fcntl.c
   tests=lib/fdopen.c
   tests=lib/flexmember.h
   tests=lib/getcwd-lgpl.c
@@ -1416,11 +1469,15 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/open.c
   tests=lib/priv-set.c
   tests=lib/priv-set.h
+  tests=lib/pthread_sigmask.c
   tests=lib/putenv.c
+  tests=lib/raise.c
   tests=lib/root-uid.h
   tests=lib/same-inode.h
   tests=lib/setenv.c
   tests=lib/setlocale.c
+  tests=lib/signal.in.h
+  tests=lib/sigprocmask.c
   tests=lib/stdalign.in.h
   tests=lib/symlink.c
   tests=lib/unlinkdir.c

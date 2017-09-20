@@ -1,0 +1,6 @@
+[submodule "gnulib"]
+path=gnulib
+url = git://git.sv.gnu.org/gnulib
+[submodule "util-linux"]
+path=util-linux
+url = https://kernel.googlesource.com/pub/scm/utils/util-linux/util-linux

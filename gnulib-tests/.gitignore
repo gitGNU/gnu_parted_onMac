@@ -179,3 +179,17 @@
 /wctomb-impl.h
 /wctomb.c
 /zerosize-ptr.h
+/cloexec.c
+/cloexec.h
+/fcntl.c
+/pthread_sigmask.c
+/raise.c
+/signal.in.h
+/sigprocmask.c
+/test-cloexec.c
+/test-fcntl.c
+/test-pthread_sigmask1.c
+/test-pthread_sigmask2.c
+/test-raise.c
+/test-signal-h.c
+/test-sigprocmask.c

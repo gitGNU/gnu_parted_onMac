@@ -105,7 +105,6 @@
 /rpmatch.c
 /safe-read.c
 /safe-read.h
-/secure_getenv.c
 /sleep.c
 /stat-w32.c
 /stat-w32.h

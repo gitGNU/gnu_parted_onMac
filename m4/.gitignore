@@ -121,7 +121,6 @@
 /regex.m4
 /rpmatch.m4
 /safe-read.m4
-/secure_getenv.m4
 /setenv.m4
 /setlocale.m4
 /sleep.m4
@@ -165,3 +164,10 @@
 /xstrndup.m4
 /xstrtol.m4
 /yield.m4
+/fcntl.m4
+/manywarnings-c++.m4
+/open-cloexec.m4
+/pthread_sigmask.m4
+/raise.m4
+/signal_h.m4
+/signalblocking.m4
